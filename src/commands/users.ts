@@ -1,5 +1,5 @@
-import { setUser } from "src/config";
-import { createUser, getUser, getUsers } from "src/lib/db/queries/users";
+import { readConfig, setUser } from "src/config";
+import { createUser, getUsers } from "src/lib/db/queries/users";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length !== 1) {
@@ -7,14 +7,9 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
   }
 
   const username = args[0];
-  const existingUser = await getUser(username);
+  setUser(username);
 
-  if (!existingUser) {
-    throw new Error(`user ${username} doesn't exits in the database`);
-  }
-
-  setUser(existingUser.name);
-  console.log(`Logging in as ${existingUser.name}...`);
+  console.log(`Logging in as ${username}...`);
   console.log("User switched successfully!");
 }
 
@@ -30,11 +25,18 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
     throw new Error(`User ${userName} not found`);
   }
 
-  console.log(`user ${user.name} was created`);
   setUser(user.name);
+  console.log(`user ${user.name} was created`);
 }
 
 export async function handlerGetUsers(_: string) {
   const users = await getUsers();
-  console.log(users);
+  const config = readConfig();
+  const currentUser = config.currentUserName;
+
+  users.map((user) => {
+    user.name === currentUser
+      ? console.log(`* ${user.name} (current)`)
+      : console.log(`* ${user.name}`);
+  });
 }
