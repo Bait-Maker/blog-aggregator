@@ -1,4 +1,4 @@
-import { fetchFeed } from "src/lib/fetch";
+import { fetchFeed } from "src/lib/rss";
 
 export async function handlerAgg(_: string) {
   const feedURL = "https://www.wagslane.dev/index.xml";
