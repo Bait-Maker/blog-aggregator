@@ -1,6 +1,9 @@
-import { fetchFeed } from "src/fetch";
+import { fetchFeed } from "src/lib/fetch";
 
 export async function handlerAgg(_: string) {
-  const feed = await fetchFeed("https://www.wagslane.dev/index.xml");
-  console.log(JSON.stringify(feed, null, 2));
+  const feedURL = "https://www.wagslane.dev/index.xml";
+
+  const feed = await fetchFeed(feedURL);
+  const feedDataStr = JSON.stringify(feed, null, 2);
+  console.log(feedDataStr);
 }

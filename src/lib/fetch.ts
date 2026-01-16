@@ -17,38 +17,44 @@ type RSSItem = {
 };
 
 export async function fetchFeed(feedURL: string) {
-  const result = await fetch(feedURL, {
+  const res = await fetch(feedURL, {
     method: "GET",
     headers: {
       "User-Agent": "gator",
     },
   });
-  const resposeString = result.text();
+
+  if (!res.ok) {
+    throw new Error(`failed to fetch feed: ${res.status} ${res.statusText}`);
+  }
+
+  const xml = await res.text();
   const parser = new XMLParser();
+  let result = parser.parse(xml);
 
-  let jObj = parser.parse(await resposeString);
+  const channel = result.rss?.channel;
 
-  if (!jObj.rss.channel) {
-    throw new Error("RSSFeed Channel field is missing");
+  if (!channel) {
+    throw new Error("failed to parse channel");
   }
 
   if (
-    !jObj.rss.channel.title ||
-    !jObj.rss.channel.link ||
-    !jObj.rss.channel.description
+    !channel ||
+    !channel.title ||
+    !channel.link ||
+    !channel.description ||
+    !channel.item
   ) {
-    throw new Error("Feed title, link, or description is missing");
+    throw new Error("failed to parse channel");
   }
 
-  const feedTitle = jObj.rss.channel.title;
-  const feedLink = jObj.rss.channel.link;
-  const feedDescription = jObj.rss.channel.description;
+  const feedTitle = result.rss.channel.title;
+  const feedLink = result.rss.channel.link;
+  const feedDescription = result.rss.channel.description;
 
-  let items: any[] = [];
-
-  if (jObj.rss.channel.item) {
-    items = jObj.rss.channel.item;
-  }
+  let items: any[] = Array.isArray(channel.item)
+    ? channel.item
+    : [channel.item];
 
   let rssItems: RSSItem[] = [];
 
@@ -66,7 +72,7 @@ export async function fetchFeed(feedURL: string) {
     });
   }
 
-  const rssFeed: RSSFeed = {
+  const rss: RSSFeed = {
     channel: {
       title: feedTitle,
       link: feedLink,
@@ -75,5 +81,5 @@ export async function fetchFeed(feedURL: string) {
     },
   };
 
-  return rssFeed;
+  return rss;
 }
