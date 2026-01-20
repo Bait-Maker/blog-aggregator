@@ -35,20 +35,23 @@ function printFeed(feed: Feed, user: User) {
   console.log(`* User:           ${user.name}`);
 }
 
-export async function handlerFeeds(_: string) {
+export async function handlerListFeeds(_: string) {
   const feeds = await getFeeds();
 
-  if (!feeds) {
-    throw new Error("Failed to get feeds");
+  if (feeds.length === 0) {
+    console.log(`No feeds found.`);
+    return;
   }
 
-  feeds.map((feed) => {
-    if (!feed.userName) {
-      throw new Error("Failed to get username");
+  console.log(`Found %d feeds:\n`, feeds.length);
+
+  for (let feed of feeds) {
+    const user = await getUserById(feed.userId);
+    if (!user) {
+      throw new Error(`Failed to find user for feed ${feed.id}`);
     }
 
-    console.log(`* Name:      ${feed.name}`);
-    console.log(`* URL:       ${feed.url}`);
-    console.log(`* User:      ${feed.userName}`);
-  });
+    printFeed(feed, user);
+    console.log("=======================================");
+  }
 }

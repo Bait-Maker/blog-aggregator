@@ -22,9 +22,6 @@ export async function getUsers() {
 }
 
 export async function getUserById(userId: string) {
-  const result = await db
-    .select({ name: users.name })
-    .from(users)
-    .where(eq(users.id, userId));
+  const result = await db.select().from(users).where(eq(users.id, userId));
   return firstOrUndefined(result);
 }
