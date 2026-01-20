@@ -11,6 +11,7 @@ import {
   handlerLogin,
   handlerRegister,
 } from "./commands/users";
+import { handlerFollow, hanlderListFeedFollows } from "./commands/follows";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -31,6 +32,8 @@ async function main() {
   registerCommand(commandsRegistry, "agg", handlerAgg);
   registerCommand(commandsRegistry, "addfeed", handlerAddFeed);
   registerCommand(commandsRegistry, "feeds", handlerListFeeds);
+  registerCommand(commandsRegistry, "follow", handlerFollow);
+  registerCommand(commandsRegistry, "following", hanlderListFeedFollows);
 
   try {
     await runCommand(commandsRegistry, cmdName, ...cmdArgs);
