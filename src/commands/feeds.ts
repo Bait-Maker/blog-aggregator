@@ -43,16 +43,12 @@ export async function handlerFeeds(_: string) {
   }
 
   feeds.map((feed) => {
-    const user = callUserById(feed.userId);
-    if (!user) {
-      throw new Error("Failed to get user");
+    if (!feed.userName) {
+      throw new Error("Failed to get username");
     }
+
     console.log(`* Name:      ${feed.name}`);
     console.log(`* URL:       ${feed.url}`);
-    console.log(`* User:      ${user}`);
+    console.log(`* User:      ${feed.userName}`);
   });
-}
-
-async function callUserById(userId: string) {
-  return await getUserById(userId);
 }
