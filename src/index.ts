@@ -11,7 +11,11 @@ import {
   handlerLogin,
   handlerRegister,
 } from "./commands/users";
-import { handlerFollow, hanlderListFeedFollows } from "./commands/follows";
+import {
+  handlerFollow,
+  handlerListFeedFollows,
+  handlerUnfollow,
+} from "./commands/follows";
 import { middlwareLoggedIn } from "./middleware";
 
 async function main() {
@@ -41,7 +45,12 @@ async function main() {
   registerCommand(
     commandsRegistry,
     "following",
-    middlwareLoggedIn(hanlderListFeedFollows),
+    middlwareLoggedIn(handlerListFeedFollows),
+  );
+  registerCommand(
+    commandsRegistry,
+    "unfollow",
+    middlwareLoggedIn(handlerUnfollow),
   );
 
   try {

@@ -46,3 +46,14 @@ export async function getFeedFollowsForUser(userId: string) {
     .innerJoin(feeds, eq(feed_follows.feedId, feeds.id))
     .where(eq(feed_follows.userId, userId));
 }
+
+export async function deleteFeedFollows(userId: string, feedId: string) {
+  const [result] = await db
+    .delete(feed_follows)
+    .where(
+      and(eq(feed_follows.userId, userId), eq(feed_follows.feedId, feedId)),
+    )
+    .returning();
+
+  return result;
+}
