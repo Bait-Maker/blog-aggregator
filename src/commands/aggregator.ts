@@ -3,15 +3,16 @@ import { fetchFeed } from "src/lib/rss";
 
 export async function handlerAgg(cmdName: string, ...args: string[]) {
   if (args.length !== 1) {
-    throw new Error(`Usage ${cmdName} <duration> (ex: 1m)`);
+    throw new Error(`Usage ${cmdName} <time_between_reqs> (ex: 1m)`);
   }
 
-  const time_between_reqs = args[0];
+  const timeArg = args[0];
 
-  const timeBetweenRequests = parseDuration(time_between_reqs);
+  const timeBetweenRequests = parseDuration(timeArg);
 
-  console.log(`Collecting feeds every ${time_between_reqs}`);
+  console.log(`Collecting feeds every ${timeArg}`);
 
+  // run the first scape immediately
   scrapeFeeds().catch(handleError);
 
   const interval = setInterval(() => {
@@ -46,37 +47,34 @@ export async function scrapeFeeds() {
   }
 }
 
-function parseDuration(durationStr: string): number {
+function parseDuration(durationStr: string) {
   const regex = /^(\d+)(ms|s|m|h)$/;
   const match = durationStr.match(regex);
   if (!match) {
-    throw new Error(`Duration string wrong, correct format: 1s, 1m, or 1h`);
+    return;
   }
 
-  const num = Number(match[1]);
+  if (match.length !== 3) return;
+
+  const value = parseInt(match[1], 10);
   const duration = match[2];
-  let durationMiliseconds: number;
 
   switch (duration) {
     case "ms":
-      durationMiliseconds = num;
-      break;
+      return value;
     case "s":
-      durationMiliseconds = num * 1000;
-      break;
+      return value * 1000;
     case "m":
-      durationMiliseconds = num * 60000;
-      break;
+      return value * 60 * 1000;
     case "h":
-      durationMiliseconds = num * 1000 * Math.pow(60, 2);
-      break;
+      return value * 1000 * Math.pow(60, 2);
     default:
-      return 0;
+      return;
   }
-
-  return durationMiliseconds;
 }
 
-async function handleError(err: Error) {
-  console.error("Something went wrong", err);
+async function handleError(err: unknown) {
+  console.error(
+    `Error scraping feeds: ${err instanceof Error ? err.message : err}`,
+  );
 }
