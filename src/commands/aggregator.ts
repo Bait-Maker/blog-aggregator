@@ -3,12 +3,18 @@ import { fetchFeed } from "src/lib/rss";
 
 export async function handlerAgg(cmdName: string, ...args: string[]) {
   if (args.length !== 1) {
-    throw new Error(`Usage ${cmdName} <time_between_reqs> (ex: 1m)`);
+    throw new Error(`Usage ${cmdName} <time_between_reqs>`);
   }
 
   const timeArg = args[0];
 
   const timeBetweenRequests = parseDuration(timeArg);
+
+  if (!timeBetweenRequests) {
+    throw new Error(
+      `invalid duration: ${timeArg} - use format 1h 30m 15s or 3500ms`,
+    );
+  }
 
   console.log(`Collecting feeds every ${timeArg}`);
 
