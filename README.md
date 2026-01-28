@@ -59,7 +59,7 @@ sudo passwd postgres
 
 Enter a password, and be sure you won't forget it.
 
-4.[] Start the Postgres server in the background
+4. [] Start the Postgres server in the background
 
 - Mac: `brew services start postgresql@16`
 - Linux: `sudo service postgresql start`
