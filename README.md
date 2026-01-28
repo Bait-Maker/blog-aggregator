@@ -62,8 +62,7 @@ Enter a password, and be sure you won't forget it.
 4. [ ] Start the Postgres server in the background
 
 - Mac: `brew services start postgresql@16`
-- Linux: `sudo service postgresql start`
-  5. [ ] Connect to the server. I recommend simply using the psql client. It's the "default" client for Postgres, and it's a great way to interact with the database. While it's not as user-friendly as a GUI like PGAdmin, it's a great tool to be able to do at least basic operations with.
+- Linux: `sudo service postgresql start` 5. [ ] Connect to the server. I recommend simply using the psql client. It's the "default" client for Postgres, and it's a great way to interact with the database. While it's not as user-friendly as a GUI like PGAdmin, it's a great tool to be able to do at least basic operations with.
 
 Enter the psql shell:
 
@@ -108,4 +107,4 @@ From here you can run SQL queries against the gator database. For example, to se
 SELECT version();
 ```
 
-You can type exit or use \q to leave the psql shell.
+You can type `exit` or use `\q` to leave the psql shell.
