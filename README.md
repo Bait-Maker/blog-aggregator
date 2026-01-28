@@ -30,7 +30,7 @@ The following tools are necessary in oder for the aggregator can run via the CLI
 
 ### Postgres SQL server
 
-1.[ ] Install Postgres
+1.[] Install Postgres
 
 macOS with brew:
 
@@ -45,13 +45,13 @@ sudo apt update
 sudo apt install postgresql postgresql-contrib
 ```
 
-2.[ ] Ensure the installation worked. The psql command-line utility is the default client for Postgres. Use it to make sure you're on version 16+ of Postgres:
+2.[] Ensure the installation worked. The psql command-line utility is the default client for Postgres. Use it to make sure you're on version 16+ of Postgres:
 
 ```shell
 psql --version
 ```
 
-3.[ ] (Linux only) Update postgres password:
+3.[] (Linux only) Update postgres password:
 
 ```shell
 sudo passwd postgres
@@ -59,12 +59,12 @@ sudo passwd postgres
 
 Enter a password, and be sure you won't forget it.
 
-4.[ ] Start the Postgres server in the background
+4.[] Start the Postgres server in the background
 
 - Mac: `brew services start postgresql@16`
 - Linux: `sudo service postgresql start`
 
-  5.[ ] Connect to the server. I recommend simply using the psql client. It's the "default" client for Postgres, and it's a great way to interact with the database. While it's not as user-friendly as a GUI like PGAdmin, it's a great tool to be able to do at least basic operations with.
+  5.[] Connect to the server. I recommend simply using the psql client. It's the "default" client for Postgres, and it's a great way to interact with the database. While it's not as user-friendly as a GUI like PGAdmin, it's a great tool to be able to do at least basic operations with.
 
 Enter the psql shell:
 
@@ -77,13 +77,13 @@ You should see a new prompt that looks like this:
 postgres=#
 ```
 
-6.[ ] Create a new database. I called mine gator:
+6.[] Create a new database. I called mine gator:
 
 ```shell
 CREATE DATABASE gator;
 ```
 
-7.[ ] Connect to the new database
+7.[] Connect to the new database
 
 ```shell
 \c gator
@@ -95,13 +95,13 @@ You should see a new prompt that looks like this:
 gator=#
 ```
 
-8.[ ] Set the user password (Linux only)
+8.[] Set the user password (Linux only)
 
 ```shell
 ALTER USER postgres PASSWORD 'postgres';
 ```
 
-9.[ ] Query the database
+9.[] Query the database
 
 From here you can run SQL queries against the gator database. For example, to see the version of Postgres you're running, you can run:
 
