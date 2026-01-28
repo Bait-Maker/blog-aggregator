@@ -2,7 +2,9 @@ import type { CommandHandler, UserCommandHandler } from "./commands/commands";
 import { readConfig } from "./config";
 import { getUser } from "./lib/db/queries/users";
 
-export function middlwareLoggedIn(handler: UserCommandHandler): CommandHandler {
+export function middlewareLoggedIn(
+  handler: UserCommandHandler,
+): CommandHandler {
   return async (cmdName: string, ...args: string[]) => {
     const config = readConfig();
     const userName = config.currentUserName;

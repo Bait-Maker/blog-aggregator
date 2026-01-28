@@ -25,7 +25,7 @@ export async function getFeedByURL(url: string) {
 }
 
 export async function markFeedFetched(feedId: string) {
-  const [result] = await db
+  const result = await db
     .update(feeds)
     .set({
       lastFetchedAt: new Date(),
@@ -33,7 +33,7 @@ export async function markFeedFetched(feedId: string) {
     .where(eq(feeds.id, feedId))
     .returning();
 
-  return result;
+  return firstOrUndefined(result);
 }
 
 export async function getNextFeedToFetch() {

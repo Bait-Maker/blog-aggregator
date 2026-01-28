@@ -1,4 +1,6 @@
 import { getNextFeedToFetch, markFeedFetched } from "src/lib/db/queries/feeds";
+import { createPost } from "src/lib/db/queries/posts";
+import { Feed, newPost } from "src/lib/db/schema";
 import { fetchFeed } from "src/lib/rss";
 
 export async function handlerAgg(cmdName: string, ...args: string[]) {
@@ -35,21 +37,38 @@ export async function handlerAgg(cmdName: string, ...args: string[]) {
 }
 
 export async function scrapeFeeds() {
-  const feedToFetch = await getNextFeedToFetch();
+  const feed = await getNextFeedToFetch();
 
-  if (!feedToFetch) {
+  if (!feed) {
     throw new Error(`Failed to find feed`);
   }
 
-  const fetchedFeed = await markFeedFetched(feedToFetch.id);
-  const feed = await fetchFeed(fetchedFeed.url);
-
   if (!feed) {
-    throw new Error(`Failed to find feed with url: ${fetchedFeed.url}`);
+    console.log("No feeds to fetch");
+    return;
   }
+  console.log("Found feed to fetch!");
+  scrapeFeed(feed);
+}
 
-  for (let item of feed.channel.item) {
-    console.log(`* ${item.title}`);
+async function scrapeFeed(feed: Feed) {
+  await markFeedFetched(feed.id);
+
+  const feedData = await fetchFeed(feed.url);
+  for (let item of feedData.channel.item) {
+    console.log(`Found posts: ${item.title}`);
+
+    const now = new Date();
+
+    await createPost({
+      url: item.link,
+      feedId: feed.id,
+      title: item.title,
+      createdAt: now,
+      updatedAt: now,
+      description: item.description,
+      publishedAt: new Date(item.pubDate),
+    } satisfies newPost);
   }
 }
 
